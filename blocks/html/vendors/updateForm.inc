@@ -5,6 +5,8 @@
  * @author Cliff Ingham <inghamn@bloomington.in.gov>
  * @param Vendor $this->vendor
  */
+use Blossom\Classes\View;
+
 $fields = ['name', 'address', 'city', 'state', 'zip', 'phone', 'email', 'website'];
 foreach ($fields as $f) {
 	$get = 'get'.ucfirst($f);
@@ -18,7 +20,7 @@ $title = $this->vendor->getId() ? 'Edit Vendor' : 'Add Vendor';
 	<fieldset><legend>Vendor Info</legend>
 		<input name="vendor_id" type="hidden" value="<?php echo $this->vendor->getId(); ?>" />
 		<table>
-			<tr><td><label for="name"></label></td>
+			<tr><td><label for="name">name</label></td>
 				<td><input name="name" id="name" value="<?php echo $name; ?>" /></td>
 			</tr>
 			<tr><td><label for="address">address</label></td>

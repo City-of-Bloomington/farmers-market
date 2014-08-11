@@ -9,7 +9,7 @@ use Blossom\Classes\ActiveRecord;
 use Blossom\Classes\Database;
 use Blossom\Classes\ExternalIdentity;
 
-class Person extends ActiveRecord
+class Vendor extends ActiveRecord
 {
 	protected $tablename = 'vendors';
 
@@ -61,7 +61,7 @@ class Person extends ActiveRecord
 	//----------------------------------------------------------------
 	public function getId     () { return parent::get('id');      }
 	public function getName   () { return parent::get('name');    }
-	public function getWebsite() { return parent::getWebsite(''); }
+	public function getWebsite() { return parent::get('website'); }
 	public function getAddress() { return parent::get('address'); }
 	public function getCity   () { return parent::get('city');    }
 	public function getState  () { return parent::get('state');   }
@@ -77,6 +77,18 @@ class Person extends ActiveRecord
 	public function setZip    ($s) { parent::set('zip',     $s); }
 	public function setPhone  ($s) { parent::set('phone',   $s); }
 	public function setEmail  ($s) { parent::set('email',   $s); }
+
+	/**
+	 * @param array $post
+	 */
+	public function handleUpdate($post)
+	{
+		$fields = ['name', 'website', 'address', 'city', 'state', 'zip', 'phone', 'email'];
+		foreach ($fields as $f) {
+			$set = 'set'.ucfirst($f);
+			$this->$set($post[$f]);
+		}
+	}
 
 	//----------------------------------------------------------------
 	// Custom functions

@@ -1,6 +1,19 @@
+<?php
+use Application\Models\Person;
+?>
 <nav>
 	<?php
+
+		$links = [
+			'vendors' => 'vendor',
+			'people'  => 'person',
+			'users'   => 'user'
+		];
 		$a = '<a href="%s">%s</a>';
-		echo sprintf($a, BASE_URI, $this->translate('labels.home'));
+		foreach ($links as $plural=>$single) {
+			if (Person::isAllowed($plural, 'view')) {
+				echo sprintf($a, BASE_URI.'/'.$plural, $this->translate([$single, $plural, 2]));
+			}
+		}
 	?>
 </nav>

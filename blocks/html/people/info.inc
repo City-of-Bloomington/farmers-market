@@ -13,7 +13,7 @@ if (!$username && Person::isAllowed('users')) {
 	$h = $this->template->getHelper('buttonLink');
 	$username = $h->buttonLink(
 		BASE_URI.'/users/update?user_id='.$this->person->getId(),
-		$this->translate('labels.create_account'),
+		$this->translate('create_account'),
 		'add'
 	);
 }

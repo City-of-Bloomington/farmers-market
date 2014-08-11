@@ -26,7 +26,7 @@ class VendorsController extends Controller
 
 	public function index()
 	{
-		$table = new VendorTable();
+		$table = new VendorsTable();
 		$list = $table->find();
 
 		$this->template->blocks[] = new Block('vendors/list.inc', ['vendors'=>$list]);
@@ -58,6 +58,6 @@ class VendorsController extends Controller
 			}
 		}
 
-		$this->templates->blocks[] = new Block('vendors/updateForm.inc', ['vendor'=>$vendor]);
+		$this->template->blocks[] = new Block('vendors/updateForm.inc', ['vendor'=>$vendor]);
 	}
 }

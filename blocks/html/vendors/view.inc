@@ -5,6 +5,9 @@
  * @author Cliff Ingham <inghamn@bloomington.in.gov>
  * @param Vendor $this->vendor
  */
+use Application\Models\Person;
+use Blossom\Classes\View;
+
 $fields = ['name', 'address', 'city', 'state', 'zip', 'phone', 'email', 'website'];
 foreach ($fields as $f) {
 	$get = 'get'.ucfirst($f);
@@ -28,3 +31,4 @@ echo "
 	<tr><th>email</th><td>$email</td></tr>
 	<tr><th>website</th><td>$website</td></tr>
 </table>
+";
