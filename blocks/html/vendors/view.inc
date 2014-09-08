@@ -8,7 +8,7 @@
 use Application\Models\Person;
 use Blossom\Classes\View;
 
-$fields = ['name', 'address', 'city', 'state', 'zip', 'phone', 'email', 'website'];
+$fields = ['name', 'address', 'city', 'county', 'state', 'zip', 'phone', 'email', 'website'];
 foreach ($fields as $f) {
 	$get = 'get'.ucfirst($f);
 	$$f = View::escape($this->vendor->$get());
@@ -25,10 +25,11 @@ if (Person::isAllowed('vendors', 'edit')) {
 echo "
 <h2>$name $editButton</h2>
 <table>
-	<tr><th>address</th><td>$address</td></tr>
-	<tr><th>city</th><td>$city $state $zip</td></tr>
-	<tr><th>phone</th><td>$phone</td></tr>
-	<tr><th>email</th><td>$email</td></tr>
-	<tr><th>website</th><td>$website</td></tr>
+	<tr><th>{$this->_('address')}</th><td>$address</td></tr>
+	<tr><th>{$this->_('county')}</th><td>$county</td></tr>
+	<tr><th>{$this->_('city')}</th><td>$city $state $zip</td></tr>
+	<tr><th>{$this->_('phone')}</th><td>$phone</td></tr>
+	<tr><th>{$this->_('email')}</th><td>$email</td></tr>
+	<tr><th>{$this->_('website')}</th><td>$website</td></tr>
 </table>
 ";

@@ -9,11 +9,7 @@ namespace Application\Models;
 use Blossom\Classes\TableGateway;
 use Zend\Db\Sql\Select;
 
-class VendorsTable extends TableGateway
+class SpacesTable extends TableGateway
 {
-    protected $columns = [
-        'id', 'name', 'website', 'address', 'city', 'county', 'state', 'zip', 'phone', 'email'
-    ];
-    
-	public function __construct() { parent::__construct('vendors', __namespace__.'\Vendor'); }
+	public function __construct() { parent::__construct('spaces', __namespace__.'\Space'); }
 }

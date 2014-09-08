@@ -23,6 +23,7 @@ $ZEND_ACL->addResource(new Resource('users'));
 $ZEND_ACL->addResource(new Resource('login'));
 
 $ZEND_ACL->addResource(new Resource('vendors'));
+$ZEND_ACL->addResource(new Resource('spaces'));
 
 /**
  * Assign permissions to the resources
@@ -30,7 +31,7 @@ $ZEND_ACL->addResource(new Resource('vendors'));
 // Permissions for unauthenticated browsing
 $ZEND_ACL->allow(null,'login');
 $ZEND_ACL->allow(null, ['index'  ], ['index']);
-$ZEND_ACL->allow(null, ['vendors'], ['index', 'view']);
+$ZEND_ACL->allow(null, ['vendors', 'spaces'], ['index', 'view']);
 
 // Allow Staff to do stuff
 $ZEND_ACL->allow('Staff',['people', 'vendors']);

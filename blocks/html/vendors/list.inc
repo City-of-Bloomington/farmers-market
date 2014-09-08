@@ -8,13 +8,14 @@
 use Application\Models\Person;
 use Blossom\Classes\View;
 ?>
-<h2>Vendors
-	<?php
-		if (Person::isAllowed('vendors', 'edit')) {
+<h2><?php
+        echo $this->_(['vendor', 'vendors', 2]);
+        $userCanEdit = Person::isAllowed('vendors', 'edit');
+		if ($userCanEdit) {
 			$helper = $this->template->getHelper('buttonLink');
 			echo $helper->buttonLink(
 				BASE_URI.'/vendors/update',
-				'Add Vendor',
+				$this->_('vendor_add'),
 				'add'
 			);
 		}
@@ -23,34 +24,37 @@ use Blossom\Classes\View;
 <table>
 	<thead>
 		<tr><th></th>
-			<th>name</th>
-			<th>address</th>
-			<th>city, state zip</th>
-			<th>phone</th>
-			<th>email</th>
-			<th>website</th>
+			<th><?php echo $this->_('name'); ?></th>
+			<th><?php echo $this->_('address'); ?></th>
+			<th><?php echo $this->_('county'); ?></th>
+			<th><?php echo "{$this->_('city')}, {$this->_('state')} {$this->_('zip')}"; ?></th>
+			<th><?php echo $this->_('phone'); ?></th>
+			<th><?php echo $this->_(['email', 'emails', 1]); ?></th>
+			<th><?php echo $this->_('website'); ?></th>
 		</tr>
 	</thead>
 	<tbody>
 	<?php
-		$fields = ['name', 'address', 'city', 'state', 'zip', 'phone', 'email', 'website'];
+		$fields = ['name', 'address', 'city', 'county', 'state', 'zip', 'phone', 'email', 'website'];
 		foreach ($this->vendors as $vendor) {
+            $editButton = '';
+            if ($userCanEdit) {
+                $editButton = $helper->buttonLink(
+                    BASE_URI.'/vendors/update?vendor_id='.$vendor->getId(),
+                    $this->_('vendor_edit'),
+                    'edit'
+                );
+            }
 			foreach ($fields as $f) {
 				$get = 'get'.ucfirst($f);
 				$$f = View::escape($vendor->$get());
 			}
-			$editButton = '';
-			if (Person::isAllowed('vendors', 'edit')) {
-				$editButton = $helper->buttonLink(
-					BASE_URI.'/vendors/update?vendor_id='.$vendor->getId(),
-					'Edit Vendor',
-					'edit'
-				);
-			}
+			$url = BASE_URI.'/vendors/view?vendor_id='.$vendor->getId();
 			echo "
-			<tr><td></td>
-				<td>$name</td>
+			<tr><td>$editButton</td>
+				<td><a href=\"$url\">$name</a></td>
 				<td>$address</td>
+				<td>$county</td>
 				<td>$city $state $zip</td>
 				<td>$phone</td>
 				<td>$email</td>

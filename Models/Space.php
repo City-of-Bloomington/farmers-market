@@ -9,9 +9,9 @@ use Blossom\Classes\ActiveRecord;
 use Blossom\Classes\Database;
 use Blossom\Classes\ExternalIdentity;
 
-class Vendor extends ActiveRecord
+class Space extends ActiveRecord
 {
-	protected $tablename = 'vendors';
+	protected $tablename = 'spaces';
 
 	/**
 	 * Populates the object with data
@@ -33,13 +33,13 @@ class Vendor extends ActiveRecord
 			}
 			else {
 				$zend_db = Database::getConnection();
-				$sql = 'select * from vendors where id=?';
+				$sql = 'select * from spaces where id=?';
 				$result = $zend_db->createStatement($sql)->execute([$id]);
 				if (count($result)) {
 					$this->exchangeArray($result->current());
 				}
 				else {
-					throw new \Exception('vendors/unknownVendor');
+					throw new \Exception('spaces/unknownSpace');
 				}
 			}
 		}
@@ -61,38 +61,16 @@ class Vendor extends ActiveRecord
 	//----------------------------------------------------------------
 	public function getId     () { return parent::get('id');      }
 	public function getName   () { return parent::get('name');    }
-	public function getWebsite() { return parent::get('website'); }
-	public function getAddress() { return parent::get('address'); }
-	public function getCity   () { return parent::get('city');    }
-	public function getCounty () { return parent::get('county');  }
-	public function getState  () { return parent::get('state');   }
-	public function getZip    () { return parent::get('zip');     }
-	public function getPhone  () { return parent::get('phone');   }
-	public function getEmail  () { return parent::get('email');   }
 
 	public function setName   ($s) { parent::set('name',    $s); }
-	public function setWebsite($s) { parent::set('website', $s); }
-	public function setAddress($s) { parent::set('address', $s); }
-	public function setCity   ($s) { parent::set('city',    $s); }
-	public function setCounty ($s) { parent::set('county',  $s); }
-	public function setState  ($s) { parent::set('state',   $s); }
-	public function setZip    ($s) { parent::set('zip',     $s); }
-	public function setPhone  ($s) { parent::set('phone',   $s); }
-	public function setEmail  ($s) { parent::set('email',   $s); }
 
-	/**
-	 * @param array $post
-	 */
 	public function handleUpdate($post)
 	{
-		$fields = ['name', 'website', 'address', 'city', 'county', 'state', 'zip', 'phone', 'email'];
-		foreach ($fields as $f) {
-			$set = 'set'.ucfirst($f);
-			$this->$set($post[$f]);
-		}
+		$this->setName($post['name']);
 	}
 
 	//----------------------------------------------------------------
 	// Custom functions
 	//----------------------------------------------------------------
+	public function __toString() { return $this->getName(); }
 }

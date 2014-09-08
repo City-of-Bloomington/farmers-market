@@ -6,6 +6,7 @@ use Application\Models\Person;
 
 		$links = [
 			'vendors' => 'vendor',
+			'spaces'  => 'space',
 			'people'  => 'person',
 			'users'   => 'user'
 		];

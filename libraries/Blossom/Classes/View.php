@@ -5,22 +5,13 @@
  * @author Cliff Ingham <inghamn@bloomington.in.gov>
  */
 namespace Blossom\Classes;
-use Zend\I18n\Translator\Translator;
 
 abstract class View
 {
 	protected $vars = array();
-	private static $translator;
 
 	abstract public function render();
 
-	/**
-	 * Instantiates the Zend Translator
-	 *
-	 * See: ZendFramework documentation for full information
-	 * http://framework.zend.com/manual/2.2/en/modules/zend.i18n.translating.html
-	 * @see http://framework.zend.com/manual/2.2/en/modules/zend.i18n.translating.html
-	 */
 	public function __construct(array $vars=null)
 	{
 		if (count($vars)) {
@@ -29,14 +20,13 @@ abstract class View
 			}
 		}
 
-		if (!self::$translator) {
-			self::$translator = new Translator();
-			self::$translator->addTranslationFilePattern(
-				'gettext',
-				APPLICATION_HOME.'/language',
-				'%s.mo'
-			);
-		}
+		$locale = LOCALE.'.utf8';
+
+        putenv("LC_ALL=$locale");
+        setlocale(LC_ALL, $locale);
+        bindtextdomain('labels',   APPLICATION_HOME.'/language');
+        bindtextdomain('messages', APPLICATION_HOME.'/language');
+        textdomain('labels');
 	}
 
 	/**
@@ -98,31 +88,35 @@ abstract class View
 	/**
 	 * Returns the gettext translation of msgid
 	 *
+	 * The default domain is "labels".  Any other text domains must be passed
+	 * in the second parameter.
+	 *
 	 * For entries in the PO that are plurals, you must pass msgid as an array
-	 * $this->translate(array('msgid', 'msgid_plural', $num))
+	 * $this->translate( ['msgid', 'msgid_plural', $num] )
 	 *
-	 * See: ZendFramework documentation for full information
-	 * http://framework.zend.com/manual/2.2/en/modules/zend.i18n.translating.html
-	 *
-	 * @see http://framework.zend.com/manual/2.2/en/modules/zend.i18n.translating.html
 	 * @param mixed $msgid String or Array
+	 * @param string $domain Alternate domain
 	 * @return string
 	 */
-	public function translate($msgid)
+	public function translate($msgid, $domain=null)
 	{
-		if (is_array($msgid)) {
-			return self::$translator->translatePlural($msgid[0], $msgid[1], $msgid[2]);
-		}
-		else {
-			return self::$translator->translate($msgid);
-		}
+        if (is_array($msgid)) {
+            return $domain
+                ? dngettext($domain, $msgid[0], $msgid[1], $msgid[2])
+                : ngettext (         $msgid[0], $msgid[1], $msgid[2]);
+        }
+        else {
+            return $domain
+                ? dgettext($domain, $msgid)
+                : gettext (         $msgid);
+        }
 	}
 
 	/**
 	 * Alias of $this->translate()
 	 */
-	public function _($msgid)
+	public function _($msgid, $domain=null)
 	{
-		return $this->translate($msgid);
+		return $this->translate($msgid, $domain);
 	}
 }

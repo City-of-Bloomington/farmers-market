@@ -20,6 +20,8 @@ class VendorsController extends Controller
 		}
 		catch (\Exception $e) {
 			$_SESSION['errorMessages'][] = $e;
+			header('Location: '.BASE_URL.'/vendors');
+			exit();
 		}
 	}
 

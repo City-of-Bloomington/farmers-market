@@ -18,6 +18,7 @@ create table vendors (
 	website varchar(255),
 	address varchar(128),
 	city varchar(128),
+	county varchar(128),
 	state varchar(2),
 	zip varchar(5),
 	phone varchar(15),
