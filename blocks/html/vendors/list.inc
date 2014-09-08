@@ -6,6 +6,7 @@
  * @param Zend\Db\Result $this->vendors
  */
 use Application\Models\Person;
+use Application\Templates\Helpers\ButtonLink;
 use Blossom\Classes\View;
 ?>
 <h2><?php
@@ -42,7 +43,8 @@ use Blossom\Classes\View;
                 $editButton = $helper->buttonLink(
                     BASE_URI.'/vendors/update?vendor_id='.$vendor->getId(),
                     $this->_('vendor_edit'),
-                    'edit'
+                    'edit',
+                    ButtonLink::SIZE_ICON
                 );
             }
 			foreach ($fields as $f) {
