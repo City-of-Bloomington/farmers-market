@@ -5,6 +5,7 @@
  * @author Cliff Ingham <inghamn@bloomington.in.gov>
  */
 namespace Application\Controllers;
+use Application\Models\Person;
 use Application\Models\Vendor;
 use Application\Models\VendorsTable;
 use Blossom\Classes\Controller;
@@ -39,7 +40,9 @@ class VendorsController extends Controller
 		$vendor = $this->loadVendor($_REQUEST['vendor_id']);
 
 		$this->template->blocks[] = new Block('vendors/view.inc', ['vendor'=>$vendor]);
-
+        if (Person::isAllowed('people', 'view')) {
+            $this->template->blocks[] = new Block('vendors/people.inc', ['vendor'=>$vendor]);
+        }
 	}
 
 	public function update()

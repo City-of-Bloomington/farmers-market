@@ -7,17 +7,19 @@
  */
 use Application\Models\Person;
 use Blossom\Classes\View;
+use Blossom\Classes\Url;
 ?>
 <div class="interfaceBox">
 	<h2><?php
 			echo $this->translate(['person','people',2]);
 
+			$return_url = Url::current_url();
 			$helper = $this->template->getHelper('buttonLink');
 
 			if (Person::isAllowed('people')) {
 				echo $helper->buttonLink(
-					BASE_URI.'/people/update',
-					$this->translate('add_person'),
+					BASE_URI."/people/update?return_url=$return_url",
+					$this->translate('person_add'),
 					'add'
 				);
 			}
@@ -37,7 +39,7 @@ use Blossom\Classes\View;
 				$editButton = '';
 				if (Person::isAllowed('people')) {
 					$editButton = $helper->buttonLink(
-						BASE_URI.'/people/update?person_id='.$person->getId(),
+						BASE_URI."/people/update?person_id={$person->getId()};return_url=$return_url",
 						$this->translate('edit'),
 						'edit'
 					);

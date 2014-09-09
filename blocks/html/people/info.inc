@@ -7,10 +7,13 @@
  */
 use Application\Models\Person;
 use Blossom\Classes\View;
+use Blossom\Classes\Url;
+
+$return_url = Url::current_url();
+$h = $this->template->getHelper('buttonLink');
 
 $username = $this->person->getUsername();
 if (!$username && Person::isAllowed('users')) {
-	$h = $this->template->getHelper('buttonLink');
 	$username = $h->buttonLink(
 		BASE_URI.'/users/update?user_id='.$this->person->getId(),
 		$this->translate('create_account'),
@@ -18,10 +21,19 @@ if (!$username && Person::isAllowed('users')) {
 	);
 }
 
+$editButton = '';
+if (Person::isAllowed('people', 'edit')) {
+    $editButton = $h->buttonLink(
+        BASE_URI."/people/update?person_id={$this->person->getId()};return_url=$return_url",
+        $this->_('person_edit'),
+        'edit'
+    );
+}
+
 $name = View::escape($this->person->getFullname());
 echo <<<EOT
 <div class="personInfo">
-	<h2>$name</h2>
+	<h2>$name $editButton</h2>
 	<table>
 		<tr><th>Email</th>
 			<td>{$this->person->getEmail()}</td>
