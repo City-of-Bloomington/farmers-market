@@ -7,6 +7,7 @@
  */
 use Application\Models\Person;
 use Blossom\Classes\View;
+use Blossom\Classes\Url;
 
 $fields = ['name', 'address', 'city', 'county', 'state', 'zip', 'phone', 'email', 'website'];
 foreach ($fields as $f) {
@@ -15,9 +16,11 @@ foreach ($fields as $f) {
 }
 $editButton = '';
 if (Person::isAllowed('vendors', 'edit')) {
+    $return_url = Url::current_url();
+
 	$helper = $this->template->getHelper('buttonLink');
 	$editButton = $helper->buttonLink(
-		BASE_URI.'/vendors/update?vendor_id='.$this->vendor->getId(),
+		BASE_URI."/vendors/update?vendor_id={$this->vendor->getId()};return_url=$return_url",
 		'Edit Vendor',
 		'edit'
 	);

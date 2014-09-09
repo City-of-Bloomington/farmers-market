@@ -11,6 +11,9 @@ use Zend\Db\Sql\Select;
 
 class PeopleTable extends TableGateway
 {
+    protected $columns = [
+        'id', 'firstname', 'lastname', 'email', 'username', 'authenticationMethod', 'role'
+    ];
 	public function __construct() { parent::__construct('people', __namespace__.'\Person'); }
 
 	/**
@@ -34,8 +37,15 @@ class PeopleTable extends TableGateway
 						}
 					break;
 
+					case 'vendor_id':
+                        $select->join(['v'=>'vendor_people'], 'people.id=v.person_id', []);
+                        $select->where([$key=>$value]);
+                    break;
+
 					default:
-						$select->where([$key=>$value]);
+                        if (in_array($key, $this->columns)) {
+                            $select->where([$key=>$value]);
+                        }
 				}
 			}
 		}

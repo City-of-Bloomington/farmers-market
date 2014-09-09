@@ -48,11 +48,17 @@ class VendorsController extends Controller
 			? $this->loadVendor($_REQUEST['vendor_id'])
 			: new Vendor();
 
+        $return_url = !empty($_REQUEST['return_url'])
+            ? $_REQUEST['return_url']
+            : null;
+
 		if (isset($_POST['name'])) {
 			try {
 				$vendor->handleUpdate($_POST);
 				$vendor->save();
-				header('Location: '.BASE_URL.'/vendors/view?vendor_id='.$vendor->getId());
+
+				if (!$return_url) { $return_url = BASE_URL.'/vendors/view?vendor_id='.$vendor->getId(); }
+				header("Location: $return_url");
 				exit();
 			}
 			catch (\Exception $e) {
@@ -60,6 +66,6 @@ class VendorsController extends Controller
 			}
 		}
 
-		$this->template->blocks[] = new Block('vendors/updateForm.inc', ['vendor'=>$vendor]);
+		$this->template->blocks[] = new Block('vendors/updateForm.inc', ['vendor'=>$vendor, 'return_url'=>$return_url]);
 	}
 }
