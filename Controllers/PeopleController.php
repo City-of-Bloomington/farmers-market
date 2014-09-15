@@ -27,15 +27,23 @@ class PeopleController extends Controller
 
 	public function index()
 	{
-		$table = new PeopleTable();
-		$people = $table->find(null, null, true);
+        if (!empty($_GET['callback'])) {
+            $this->template->setFilename('popup');
+        }
+        
+        $this->template->blocks[] = new Block('people/searchForm.inc');
 
-		$page = !empty($_GET['page']) ? (int)$_GET['page'] : 1;
-		$people->setCurrentPageNumber($page);
-		$people->setItemCountPerPage(20);
+        if (!empty($_GET['firstname']) || !empty($_GET['lastname']) || !empty($_GET['email'])) {
+            $table = new PeopleTable();
+            $people = $table->search($_GET, null, true);
 
-		$this->template->blocks[] = new Block('people/list.inc',    ['people'   =>$people]);
-		$this->template->blocks[] = new Block('pageNavigation.inc', ['paginator'=>$people]);
+            $page = !empty($_GET['page']) ? (int)$_GET['page'] : 1;
+            $people->setCurrentPageNumber($page);
+            $people->setItemCountPerPage(20);
+
+            $this->template->blocks[] = new Block('people/list.inc',    ['people'   =>$people]);
+            $this->template->blocks[] = new Block('pageNavigation.inc', ['paginator'=>$people]);
+        }
 	}
 
 	public function view()

@@ -14,7 +14,6 @@ class Vendor extends ActiveRecord
 	protected $tablename = 'vendors';
 
 	private $people = [];
-	private $peopleUpdated = false;
 
 	/**
 	 * Populates the object with data
@@ -60,7 +59,6 @@ class Vendor extends ActiveRecord
         parent::exchangeArray($data);
 
         $this->people = [];
-        $this->peopleUpdated = false;
 	}
 
 	public function validate()
@@ -74,7 +72,6 @@ class Vendor extends ActiveRecord
 	public function save()
 	{
         parent::save();
-        if ($this->peopleUpdated) { $this->savePeople(array_keys($this->getPeople())); }
     }
 
 	//----------------------------------------------------------------
@@ -132,40 +129,47 @@ class Vendor extends ActiveRecord
 	}
 
 	/**
-	 * Sets the people for this vendor.  Does not save to database
+	 * Create a vendor_people relationship in the database
 	 *
-	 * @param string $ids Comma separated list of person_id's
+	 * @param int $id The person_id to add
 	 */
-	public function setPeople($ids)
+	public function addPerson($id)
 	{
-        $this->peopleUpdated = true;
-        $this->people = [];
-        foreach (explode(',', $ids) as $id) {
-            $id = (int)$id;
+        if ($this->getId() && !empty($id)) {
+            $person = new Person($id);
 
-            try {
-                $this->people[$id] = new Person($id);
-            }
-            catch (\Exception $e) {
-            }
+            // Update the database
+            $zend_db = Database::getConnection();
+            $zend_db->query('insert vendor_people set vendor_id=? and person_id=?')
+                    ->execute([$this->getId(), $person->getId()]);
+
+            // Update this object's state with the new person
+            $people = $this->getPeople();
+            $this->people[$person->getId()] = $person;
         }
 	}
 
 	/**
-	 * Saves the list of vendor_people to the database
+	 * Removes a person association from the database
 	 *
-	 * @param array $ids An array of person_id
+	 * This only deletes the vendor_people relationship.
+	 * This does not delete a person's record from the database.
+	 *
+	 * @param int $id The person_id to remove
 	 */
-	public function savePeople(array $ids)
+	public function removePerson($id)
 	{
-        if ($this->getId()) {
-            $this->people = [];
-            $zend_db = Database::getConnection();
-            $zend_db->query('delete from vendor_people where vendor_id=?')->execute([$this->getId()]);
+        if ($this->getId() && !empty($id)) {
+            $person = new Person($id);
 
-            $query = $zend_db->createStatement('insert into vendor_people set vendor_id=?, person_id=?');
-            foreach ($ids as $id) {
-                $query->execute([$this->getId(), (int)$id]);
+            $zend_db = Database::getConnection();
+            $zend_db->query('delete from vendor_people where vendor_id=? and person_id=?')
+                    ->execute([$this->getId(), $person->getId()]);
+
+            // Remove the person from this object's state
+            $people = $this->getPeople();
+            if (isset($this->people[$person->getId()])) {
+                unset($this->people[$person->getId()]);
             }
         }
 	}

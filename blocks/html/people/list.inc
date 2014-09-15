@@ -45,11 +45,22 @@ use Blossom\Classes\Url;
 					);
 				}
 
+				if (!empty($_REQUEST['callback'])) {
+                    $this->template->addToAsset('scripts', JQUERY);
+                    $this->template->addToAsset('scripts', BASE_URI.'/js/personChooser.js');
+
+                    $callback = preg_replace('/[^a-zA-Z_\.]/', '', $_REQUEST['callback']);
+                    $url = "javascript:self.opener.$callback('{$person->getId()}');";
+				}
+				else {
+                    $url = $person->getUri();
+                }
+
 				$name = View::escape($person->getFullname());
 				echo "
 				<tr><td>$editButton</td>
 					<td>{$person->getUsername()}</td>
-					<td><a href=\"{$person->getURL()}\">$name</a></td>
+					<td><a href=\"$url\">$name</a></td>
 					<td>{$person->getEmail()}</td>
 				</tr>
 				";
