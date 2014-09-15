@@ -16,9 +16,17 @@ use Blossom\Classes\Url;
 			$return_url = Url::current_url();
 			$helper = $this->template->getHelper('buttonLink');
 
+			$addUrl = new Url(BASE_URL.'/people/update');
+			$fields = ['firstname', 'lastname', 'email'];
+			foreach ($_REQUEST as $key=>$value) {
+                if (!in_array($key, $fields)) {
+                    $addUrl->$key = $value;
+                }
+			}
+
 			if (Person::isAllowed('people')) {
 				echo $helper->buttonLink(
-					BASE_URI."/people/update?return_url=$return_url",
+					$addUrl,
 					$this->translate('person_add'),
 					'add'
 				);

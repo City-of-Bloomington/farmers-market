@@ -140,7 +140,7 @@ class Vendor extends ActiveRecord
 
             // Update the database
             $zend_db = Database::getConnection();
-            $zend_db->query('insert vendor_people set vendor_id=? and person_id=?')
+            $zend_db->query('insert vendor_people set vendor_id=?, person_id=?')
                     ->execute([$this->getId(), $person->getId()]);
 
             // Update this object's state with the new person

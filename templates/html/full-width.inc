@@ -7,7 +7,9 @@
 ?>
 <body>
 	<?php
-		$this->_include('partials/banner.inc');
+        if (!isset($_REQUEST['popup'])) {
+            $this->_include('partials/banner.inc');
+        }
 	?>
 	<div id="panel-container">
 		<div id="content-panel">

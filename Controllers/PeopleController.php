@@ -27,10 +27,6 @@ class PeopleController extends Controller
 
 	public function index()
 	{
-        if (!empty($_GET['callback'])) {
-            $this->template->setFilename('popup');
-        }
-        
         $this->template->blocks[] = new Block('people/searchForm.inc');
 
         if (!empty($_GET['firstname']) || !empty($_GET['lastname']) || !empty($_GET['email'])) {
@@ -68,7 +64,12 @@ class PeopleController extends Controller
 			try {
 				$person->save();
 
-				if (!$return_url) { $return_url = BASE_URL."/people/view?person_id={$person->getId()}"; }
+				if (!empty($_REQUEST['callback'])) {
+                    $return_url = BASE_URL."/callback?data={$person->getId()};callback=$_REQUEST[callback]";
+				}
+                elseif (!$return_url) {
+                    $return_url = BASE_URL."/people/view?person_id={$person->getId()}";
+                }
 				header("Location: $return_url");
 				exit();
 			}

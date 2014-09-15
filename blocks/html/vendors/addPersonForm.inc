@@ -11,7 +11,7 @@ $this->template->addToAsset('scripts', JQUERY);
 $this->template->addToAsset('scripts', BASE_URI.'/js/personChooser.js');
 ?>
 <h2><?php echo $this->_('person_add'); ?></h2>
-<form method="post" action="<?php echo BASE_URI; ?>/vendors/addPerson">
+<form method="post" action="<?php echo BASE_URI; ?>/vendors/addPerson" id="addPersonForm">
     <fieldset>
         <input name="vendor_id" type="hidden" value="<?php echo $this->vendor->getId(); ?>" />
         <table>

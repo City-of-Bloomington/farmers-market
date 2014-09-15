@@ -20,7 +20,16 @@ $title = $this->person->getId() ? View::escape('Edit '.$this->person->getFirstna
 		<fieldset><legend><?php echo $this->_('info_person'); ?></legend>
 			<input name="person_id"  type="hidden" value="<?php echo $this->person->getId(); ?>" />
 			<input name="return_url" type="hidden" value="<?php echo $this->return_url; ?>" />
-
+            <?php
+                // Preserve any extra parameters passed in
+                foreach ($_REQUEST as $key=>$value) {
+                    if (!in_array($key,$fields)) {
+                        $key   = View::escape($key);
+                        $value = View::escape($value);
+                        echo "<input type=\"hidden\" name=\"$key\" value=\"$value\" />\n";
+                    }
+                }
+            ?>
 			<table>
 				<tr><td><label for="firstname" class="required"><?php echo $this->_('firstname'); ?></label></td>
 					<td><input name="firstname" id="firstname" value="<?php echo $firstname; ?>" /></td>
@@ -34,9 +43,18 @@ $title = $this->person->getId() ? View::escape('Edit '.$this->person->getFirstna
 					<td><input name="email" id="email" value="<?php echo $email; ?>" /></td>
 				</tr>
 			</table>
+
+            <button type="submit"><span class="fa fa-check"></span> <?php echo $this->_('save'); ?></button>
 			<?php
-				$h = $this->template->getHelper('saveAndCancelButtons');
-				echo $h->saveAndCancelButtons($this->return_url);
+                $onclick = isset($_REQUEST['callback'])
+                    ? 'onclick="self.close();"'
+                    : '';
+                echo "
+                <a class=\"btn\" href=\"{$this->return_url}\" $onclick>
+                    <span class=\"fa fa-times\"></span>
+                    {$this->_('cancel')}
+                </a>
+                ";
 			?>
 		</fieldset>
 	</form>

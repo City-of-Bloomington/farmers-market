@@ -35,6 +35,7 @@ button, .btn {
     background-image:url('images/buttonBackground.png');
     background-position:left center;
     background-repeat:repeat-x;
+    cursor:pointer;
 }
 .hidden-label       { font-size:0; height:1px; overflow:hidden; }
 .fa-times       { color:red;   }
@@ -88,3 +89,5 @@ header nav a { font-weight:bold; color:black; margin-right:1em; }
 .pageNavigation ul { list-style-type:none; }
 .pageNavigation li { display:inline; margin-right:1em; }
 .pageNavigation .current { border:2px solid green; }
+
+#addPersonForm input#person_id { display:none; }
